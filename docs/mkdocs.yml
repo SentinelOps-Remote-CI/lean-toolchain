@@ -1,0 +1,61 @@
+site_name: Lean Toolchain
+site_description: Cryptographic, math, and data-parsing primitives formally proven in Lean 4
+site_author: Lean Toolchain Contributors
+site_url: https://lean-toolchain.github.io
+
+repo_name: lean-toolchain/lean-toolchain
+repo_url: https://github.com/lean-toolchain/lean-toolchain
+edit_uri: edit/main/docs/
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [../LeanToolchain]
+          options:
+            show_source: true
+            show_root_heading: true
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: getting-started/installation.md
+    - Quick Start: getting-started/quick-start.md
+  - API Reference:
+    - Crypto: api/crypto.md
+    - Math: api/math.md
+    - Data Parsing: api/data-parsing.md
+  - Development:
+    - Contributing: development/contributing.md
+    - Style Guide: development/style-guide.md
+    - Extraction: development/extraction.md
+  - Examples:
+    - SHA-256: examples/sha256.md
+    - HMAC: examples/hmac.md
+    - CSV Parsing: examples/csv-parsing.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - toc:
+      permalink: true 

@@ -1,0 +1,58 @@
+name: Proof Help
+description: Get help with a proof in lean-toolchain
+title: "[PROOF] "
+labels: ["help wanted", "proof"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Need help with a proof? Let's work on it together!
+
+  - type: textarea
+    id: theorem
+    attributes:
+      label: What are you trying to prove?
+      description: Describe the theorem or lemma you're working on
+      placeholder: |
+        theorem my_theorem (x y : Nat) : x + y = y + x := by
+          sorry
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context and definitions
+      description: What definitions, lemmas, or context are you working with?
+      placeholder: |
+        def my_function (n : Nat) : Nat := n * 2
+        
+        lemma helper_lemma (n : Nat) : n > 0 → n * 2 > n := by
+          intro h
+          -- proof here
+    validations:
+      required: false
+
+  - type: textarea
+    id: attempts
+    attributes:
+      label: What have you tried?
+      description: Describe your attempts and where you're stuck
+      placeholder: |
+        I tried using rw [add_comm] but that didn't work because...
+        
+        I think I need to use induction but I'm not sure how to set it up.
+    validations:
+      required: false
+
+  - type: dropdown
+    id: difficulty
+    attributes:
+      label: Difficulty level
+      options:
+        - Beginner (new to Lean)
+        - Intermediate (some experience)
+        - Advanced (experienced with Lean)
+    validations:
+      required: true 
