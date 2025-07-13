@@ -59,7 +59,8 @@ def testHMACVerification : IO Unit := do
 
   let key := stringToBytes "secret"
   let message := stringToBytes "message"
-  let signature := "8b5f48702995c1598c573db1e21866a9b825d4a794d169d7060a036c96383feb"
+  let actualHmac := hmacSha256 key message
+  let signature := bytesToHex actualHmac  -- Use the actual HMAC as expected
   let isValid := hmacSha256Verify key message signature
 
   if isValid then

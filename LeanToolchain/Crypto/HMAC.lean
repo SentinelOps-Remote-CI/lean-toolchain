@@ -31,7 +31,7 @@ def hmacPrepareKey (key : ByteArray) : ByteArray :=
   else if key.size < sha256BlockSize then
     -- If key is shorter than block size, pad with zeros
     let padding := List.replicate (sha256BlockSize - key.size) 0
-    key ++ ByteArray.mk (listToArray padding)
+    key ++ ByteArray.mk (Array.mk padding) -- Lean 4 idiom: Array.mk for List -> Array
   else
     -- Key is exactly block size
     key
@@ -45,8 +45,8 @@ def hmacSha256 (key : ByteArray) (message : ByteArray) : ByteArray :=
   let preparedKey := hmacPrepareKey key
   let outerKey := xorWithConstant preparedKey hmacOuterPad
   let innerKey := xorWithConstant preparedKey hmacInnerPad
-  let innerHash := sha256 (innerKey ++ message)
-  sha256 (outerKey ++ innerHash)
+  let innerHash := sha256 (concatBytes innerKey message)
+  sha256 (concatBytes outerKey innerHash)
 
 /-- Convenience function for HMAC-SHA256 with string inputs -/
 def hmacSha256String (key : String) (message : String) : String :=
@@ -56,10 +56,11 @@ def hmacSha256String (key : String) (message : String) : String :=
 def hmacSha256Verify (key : ByteArray) (message : ByteArray) (signature : String) : Bool :=
   bytesToHex (hmacSha256 key message) == signature
 
-/-- HMAC-SHA256 with hex inputs (placeholder for hexToBytes) -/
-def hmacSha256Hex (_keyHex : String) (_messageHex : String) : Option String :=
-  -- TODO: Implement hexToBytes function
-  none
+/-- HMAC-SHA256 with hex inputs (for RFC test vectors) -/
+def hmacSha256Hex (keyHex : String) (messageHex : String) : Option String :=
+  match hexToBytes keyHex, hexToBytes messageHex with
+  | some key, some message => some (bytesToHex (hmacSha256 key message))
+  | _, _ => none
 
 /-!
 ## Security Properties
@@ -78,5 +79,45 @@ The following properties should be formally proven:
 - HMAC provides existential unforgeability under chosen message attacks
 - HMAC is resistant to length extension attacks
 -/
+
+/-!
+## HMAC Properties and Lemmas
+-/
+
+/-- HMAC key preparation preserves block size -/
+theorem hmacPrepareKey_size (key : ByteArray) : (hmacPrepareKey key).size = sha256BlockSize := by
+  simp [hmacPrepareKey, sha256BlockSize]
+  -- This follows from the construction in hmacPrepareKey
+  sorry
+
+/-- HMAC is deterministic -/
+theorem hmacSha256_deterministic (key message : ByteArray) :
+  hmacSha256 key message = hmacSha256 key message := by
+  rfl
+
+/-- HMAC with different keys produces different outputs -/
+theorem hmacSha256_key_dependent (key1 key2 message : ByteArray) (h : key1 ≠ key2) :
+  hmacSha256 key1 message ≠ hmacSha256 key2 message := by
+  -- This requires cryptographic assumptions about SHA-256
+  sorry
+
+/-- HMAC with different messages produces different outputs -/
+theorem hmacSha256_message_dependent (key message1 message2 : ByteArray) (h : message1 ≠ message2) :
+  hmacSha256 key message1 ≠ hmacSha256 key message2 := by
+  -- This requires cryptographic assumptions about SHA-256
+  sorry
+
+/-- HMAC verification is correct -/
+theorem hmacSha256_verification_correct (key message : ByteArray) :
+  hmacSha256Verify key message (bytesToHex (hmacSha256 key message)) = true := by
+  simp [hmacSha256Verify, bytesToHex]
+
+/-- HMAC verification rejects incorrect signatures -/
+theorem hmacSha256_verification_rejects_incorrect (key message : ByteArray) (wrongSignature : String) :
+  wrongSignature ≠ bytesToHex (hmacSha256 key message) →
+  hmacSha256Verify key message wrongSignature = false := by
+  simp [hmacSha256Verify]
+  intro h
+  exact h
 
 end LeanToolchain.Crypto
