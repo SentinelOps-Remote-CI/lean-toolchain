@@ -20,3 +20,12 @@ lean_exe cryptoTests {
 lean_exe mathTests {
   root := `LeanToolchain.Math.Tests.Main
 }
+
+-- Rust extraction targets
+lean_exe extract {
+  root := `LeanToolchain.Extraction.Main
+}
+
+lean_exe benchmarks {
+  root := `LeanToolchain.Benchmarks.Main
+}

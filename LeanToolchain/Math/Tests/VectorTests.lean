@@ -20,7 +20,8 @@ def testBasicVectorConstruction : IO Unit := do
 
   -- Test empty vector
   let emptyVec : Vec Nat 0 := Vec.nil
-  IO.println s!"Empty vector length: {emptyVec.data.length}"
+  let length := emptyVec.data.length
+  IO.println s!"Empty vector length: {length}"
 
   -- Test cons construction
   let v1 : Vec Nat 1 := Vec.cons 1 (Vec.nil : Vec Nat 0)
