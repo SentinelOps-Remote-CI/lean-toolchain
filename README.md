@@ -1,6 +1,6 @@
 # Lean Toolchain
 
-[![CI](https://github.com/lean-toolchain/lean-toolchain/workflows/CI/badge.svg)](https://github.com/lean-toolchain/lean-toolchain/actions)
+[![CI](https://github.com/lean-toolchain/workflows/CI/badge.svg)](https://github.com/lean-toolchain/lean-toolchain/actions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Cryptographic, math, and data-parsing primitives formally proven in Lean 4.
